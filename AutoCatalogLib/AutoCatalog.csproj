@@ -1,0 +1,301 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{1D1FC006-D85D-40EB-841A-E49D4075C4EB}</ProjectGuid>
+    <OutputType>Exe</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>AutoCatalogLib</RootNamespace>
+    <AssemblyName>AutoCatalogLib</AssemblyName>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <TargetFrameworkProfile />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>TRACE;DEBUG</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
+    <AllowUnsafeBlocks>false</AllowUnsafeBlocks>
+    <PlatformTarget>x86</PlatformTarget>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>
+    </DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
+    <PlatformTarget>x86</PlatformTarget>
+    <UseVSHostingProcess>false</UseVSHostingProcess>
+  </PropertyGroup>
+  <PropertyGroup>
+    <StartupObject />
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\EntityFramework.6.0.2\lib\net45\EntityFramework.dll</HintPath>
+    </Reference>
+    <Reference Include="EntityFramework.SqlServer, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\EntityFramework.6.0.2\lib\net45\EntityFramework.SqlServer.dll</HintPath>
+    </Reference>
+    <Reference Include="ExcelApi">
+      <HintPath>..\packages\NetOffice.Excel.1.6.0.0\lib\net45\ExcelApi.dll</HintPath>
+      <EmbedInteropTypes>False</EmbedInteropTypes>
+    </Reference>
+    <Reference Include="NetOffice">
+      <HintPath>..\packages\NetOffice.Core.1.6.0.0\lib\net45\NetOffice.dll</HintPath>
+      <EmbedInteropTypes>False</EmbedInteropTypes>
+    </Reference>
+    <Reference Include="Ninject">
+      <HintPath>..\packages\Ninject.3.2.2.0\lib\net45-full\Ninject.dll</HintPath>
+    </Reference>
+    <Reference Include="NLog">
+      <HintPath>..\packages\NLog.2.1.0\lib\net45\NLog.dll</HintPath>
+    </Reference>
+    <Reference Include="Noesis.Javascript">
+      <HintPath>..\Noesis.Javascript v0.7 - Binaries\.Net4.0\x86\Noesis.Javascript.dll</HintPath>
+      <Private>True</Private>
+      <EmbedInteropTypes>False</EmbedInteropTypes>
+    </Reference>
+    <Reference Include="OfficeApi">
+      <HintPath>..\packages\NetOffice.Core.1.6.0.0\lib\net45\OfficeApi.dll</HintPath>
+      <EmbedInteropTypes>False</EmbedInteropTypes>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Data.SQLite, Version=1.0.92.0, Culture=neutral, PublicKeyToken=db937bc2d44ff139, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\System.Data.SQLite.Core.1.0.92.0\lib\net45\System.Data.SQLite.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Data.SQLite.EF6, Version=1.0.92.0, Culture=neutral, PublicKeyToken=db937bc2d44ff139, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\System.Data.SQLite.EF6.1.0.92.0\lib\net45\System.Data.SQLite.EF6.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Data.SQLite.Linq, Version=1.0.92.0, Culture=neutral, PublicKeyToken=db937bc2d44ff139, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\System.Data.SQLite.Linq.1.0.92.0\lib\net45\System.Data.SQLite.Linq.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+    <Reference Include="VBIDEApi">
+      <HintPath>..\packages\NetOffice.Core.1.6.0.0\lib\net45\VBIDEApi.dll</HintPath>
+      <EmbedInteropTypes>False</EmbedInteropTypes>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Business\BlobToolkit.cs" />
+    <Compile Include="Business\CatalogImport\CatalogItemSchema.cs" />
+    <Compile Include="Business\CatalogImport\CatalogImportItem.cs" />
+    <Compile Include="Business\CatalogSearch\ExactPartNumberSearch.cs" />
+    <Compile Include="Business\CatalogSearch\FullTextSearch.cs" />
+    <Compile Include="Business\CatalogSearch\ISearchResult.cs" />
+    <Compile Include="Business\CatalogSearch\IJigger.cs" />
+    <Compile Include="Business\CatalogSearch\ExactSearch.cs" />
+    <Compile Include="Business\CatalogSearch\QuickSearch.cs" />
+    <Compile Include="Business\CatalogSearch\SearchProxy.cs" />
+    <Compile Include="Business\CatalogSearch\SimpleJigger.cs" />
+    <Compile Include="Business\CatalogSearch\SmartSearch.cs" />
+    <Compile Include="Business\ExternalInvokerLocator.cs" />
+    <Compile Include="Business\Invokers\ExcelInvokerFactory.cs" />
+    <Compile Include="Business\Invokers\ExcelSourceInvoker.cs" />
+    <Compile Include="Business\IBufferedItemsWriter.cs" />
+    <Compile Include="Business\IBufferedSourceReader.cs" />
+    <Compile Include="Business\Invokers\IExcelInvokerFactory.cs" />
+    <Compile Include="Business\Invokers\IExternalInvokerFactory.cs" />
+    <Compile Include="Business\Invokers\IExternalSourceInvoker.cs" />
+    <Compile Include="Business\ImportUtils\IImportTask.cs" />
+    <Compile Include="Business\ImportUtils\IImportTaskElement.cs" />
+    <Compile Include="Business\ImportUtils\ImportTask.cs" />
+    <Compile Include="Business\ImportUtils\ImportTaskElement.cs" />
+    <Compile Include="Business\ImportUtils\ImportTaskMultiElement.cs" />
+    <Compile Include="Business\ImportUtils\ImportTaskStage.cs" />
+    <Compile Include="Business\PersistConfiguration.cs" />
+    <Compile Include="Business\SourceInvoker.cs" />
+    <Compile Include="Config.cs" />
+    <Compile Include="Exchange\IColumn.cs" />
+    <Compile Include="Exchange\ImportTargets\EmbeddedSourceProfile.cs" />
+    <Compile Include="Exchange\IPartItemFactory.cs" />
+    <Compile Include="Exchange\IPartItemIndexFormatter.cs" />
+    <Compile Include="Exchange\IRawRecordFormatterFactory.cs" />
+    <Compile Include="Exchange\PartItemFactory.cs" />
+    <Compile Include="Exchange\PartItemIndexFormatter.cs" />
+    <Compile Include="Exchange\RawRecordFormatterFactory.cs" />
+    <Compile Include="Modules\Config\ConfigManager.cs" />
+    <Compile Include="Modules\Config\IAnalogSearchEngine.cs" />
+    <Compile Include="Modules\Config\IConfigManager.cs" />
+    <Compile Include="Modules\Config\IQuickSearchEngine.cs" />
+    <Compile Include="Modules\Config\ISmartSearchEngine.cs" />
+    <Compile Include="Modules\Search\ISqlWhereClauseFormatter.cs" />
+    <Compile Include="Business\CatalogSearch\SearchBase.cs" />
+    <Compile Include="Business\CatalogSearch\ISearch.cs" />
+    <Compile Include="Business\IImportTaskAsyncProxy.cs" />
+    <Compile Include="Business\ImportAsyncProxy.cs" />
+    <Compile Include="Business\BufferedSourceReader.cs" />
+    <Compile Include="Business\ImportRulesLocator.cs" />
+    <Compile Include="Business\ImportRulesPersist.cs" />
+    <Compile Include="Business\BufferedItemsWriter.cs" />
+    <Compile Include="Business\ReaderLocator.cs" />
+    <Compile Include="Business\TargetsLocator.cs" />
+    <Compile Include="Business\TargetsPersist.cs" />
+    <Compile Include="Cli.cs" />
+    <Compile Include="Exchange\EmbeddedSource.cs" />
+    <Compile Include="Exchange\ExcelFormat\ExcelReaderFactory.cs" />
+    <Compile Include="Exchange\FileSource.cs" />
+    <Compile Include="Business\ImportToolkit.cs" />
+    <Compile Include="Business\SourceLocator.cs" />
+    <Compile Include="Business\FormattersLocator.cs" />
+    <Compile Include="Business\FormattersPersistService.cs" />
+    <Compile Include="Exchange\ExcelFormat\ExcelImportRule.cs" />
+    <Compile Include="Exchange\ExcelFormat\IExcelRule.cs" />
+    <Compile Include="Exchange\ExcelFormat\Impl\ExcelReader.cs" />
+    <Compile Include="Exchange\ExcelFormat\IExcelReader.cs" />
+    <Compile Include="Exchange\ExcelFormat\IExcelReaderEnumerator.cs" />
+    <Compile Include="Exchange\GeneralizedTypes.cs" />
+    <Compile Include="Exchange\IExcelReaderFactory.cs" />
+    <Compile Include="Exchange\IExternalFileReader.cs" />
+    <Compile Include="Exchange\IExternalReaderFactory.cs" />
+    <Compile Include="Exchange\IRule.cs" />
+    <Compile Include="Exchange\IFormatter.cs" />
+    <Compile Include="Exchange\IInternalRawRecord.cs" />
+    <Compile Include="Exchange\ImportTargets\FileSourceProfile.cs" />
+    <Compile Include="Exchange\ImportTargets\ISourceProfile.cs" />
+    <Compile Include="Exchange\ImportTargets\SourceProfile.cs" />
+    <Compile Include="Exchange\ImportTargets\TargetType.cs" />
+    <Compile Include="Exchange\ImportTargets\WebSourceProfile.cs" />
+    <Compile Include="Exchange\IRawRecordRowFormatter.cs" />
+    <Compile Include="Exchange\IExternalRawRecord.cs" />
+    <Compile Include="Exchange\IExternalReader.cs" />
+    <Compile Include="Exchange\IExternalReaderEnumerator.cs" />
+    <Compile Include="Exchange\InternalRawRecord.cs" />
+    <Compile Include="Exchange\ISource.cs" />
+    <Compile Include="Exchange\ITableRule.cs" />
+    <Compile Include="Exchange\RawRecordRowFormatter.cs" />
+    <Compile Include="Exchange\ExternalRawRecord.cs" />
+    <Compile Include="Exchange\ExternalValue.cs" />
+    <Compile Include="Exchange\ExternalValueFormat.cs" />
+    <Compile Include="Exchange\GeneralizedType.cs" />
+    <Compile Include="Exchange\RecordRow.cs" />
+    <Compile Include="Exchange\SourcePointerAttribute.cs" />
+    <Compile Include="Exchange\ValueFormatters\Impl\DefaultLambdaValueFormatters.cs" />
+    <Compile Include="Exchange\ValueFormatters\Impl\DefaultValueFormatters.cs" />
+    <Compile Include="Exchange\ValueFormatters\JavaScriptValueFormatter.cs" />
+    <Compile Include="Exchange\ValueFormatters\LambdaValueFormatter.cs" />
+    <Compile Include="JavaScript\IJavaScriptEnvironment.cs" />
+    <Compile Include="JavaScript\JavaScriptEnvironment.cs" />
+    <Compile Include="AutoCatalog.cs" />
+    <Compile Include="Modules\ModuleLocator.cs" />
+    <Compile Include="Modules\IModule.cs" />
+    <Compile Include="Modules\DependencyResolverConfig.cs" />
+    <Compile Include="Modules\Search\ITextStammer.cs" />
+    <Compile Include="Modules\Search\SqLiteSimpleWhereClauseFormatter.cs" />
+    <Compile Include="Modules\SingletonModuleAttribute.cs" />
+    <Compile Include="Persist\BusinessModels\Catalog\Currency.cs" />
+    <Compile Include="Persist\BusinessModels\Catalog\EmbeddedBlob.cs" />
+    <Compile Include="Persist\BusinessModels\Catalog\ImportTargetBridge.cs" />
+    <Compile Include="Persist\BusinessModels\Catalog\ImportTargetPoco.cs" />
+    <Compile Include="Persist\BusinessModels\Catalog\PartItem.cs" />
+    <Compile Include="Persist\BusinessModels\Catalog\ImportIdentificator.cs" />
+    <Compile Include="Persist\BusinessModels\Dynamic\Formatters\FixedFormatterReference.cs" />
+    <Compile Include="Persist\BusinessModels\Dynamic\Formatters\FixedValueFormatterBridge.cs" />
+    <Compile Include="Persist\BusinessModels\Dynamic\Formatters\ScriptedValueFormatterBridge.cs" />
+    <Compile Include="Persist\BusinessModels\ExcelFormat\ExcelFileRuleBridge.cs" />
+    <Compile Include="Persist\ConfigElement.cs" />
+    <Compile Include="Persist\Context.cs" />
+    <Compile Include="Persist\BusinessModels\ExcelFormat\ExcelImportRulePoco.cs" />
+    <Compile Include="Persist\BusinessModels\ExcelFormat\ExcelImportRuleCellPoco.cs" />
+    <Compile Include="Persist\BusinessModels\Dynamic\Formatters\PersistValueFormatter.cs" />
+    <Compile Include="Persist\BusinessModels\Dynamic\Formatters\CustomFormatterReference.cs" />
+    <Compile Include="Persist\ContextHolder.cs" />
+    <Compile Include="Persist\Generic\Bridge.cs" />
+    <Compile Include="Persist\Generic\EntityEqualityComparer.cs" />
+    <Compile Include="Persist\Generic\SetChangedEventArgument.cs" />
+    <Compile Include="Persist\Generic\GenericContext.cs" />
+    <Compile Include="Persist\Generic\GenericDbContext.cs" />
+    <Compile Include="Persist\Generic\GenericRepository.cs" />
+    <Compile Include="Persist\Generic\Entity.cs" />
+    <Compile Include="Modules\Search\UpperCaseOnlyCharAndNumsStemmer.cs" />
+    <Compile Include="Persist\Generic\IBridgeable.cs" />
+    <Compile Include="Persist\Generic\IObservableSet.cs" />
+    <Compile Include="Persist\Generic\EntityChangeState.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Tests\AssertationException.cs" />
+    <Compile Include="Tests\ITest.cs" />
+    <Compile Include="Tests\TestBase.cs" />
+    <Compile Include="TestUtils.cs" />
+    <Compile Include="Utils\CircleBuffer.cs" />
+    <Compile Include="Utils\Cli\ArgumentHeader.cs" />
+    <Compile Include="Utils\Cli\Argument.cs" />
+    <Compile Include="Utils\Cli\ArgumentsDictionary.cs" />
+    <Compile Include="Utils\Cli\ArgumentsSet.cs" />
+    <Compile Include="Utils\Cli\BatchRoutine.cs" />
+    <Compile Include="Utils\Cli\CliApplication.cs" />
+    <Compile Include="Utils\Cli\DropEverythingRoutine.cs" />
+    <Compile Include="Utils\Cli\DropImportRoutine.cs" />
+    <Compile Include="Utils\Cli\DropRecordsRoutine.cs" />
+    <Compile Include="Utils\Cli\HelpRoutine.cs" />
+    <Compile Include="Utils\Cli\ExportDbDbRoutine.cs" />
+    <Compile Include="Utils\Cli\ImportDbRoutine.cs" />
+    <Compile Include="Utils\Cli\ImportRoutine.cs" />
+    <Compile Include="Utils\Cli\ImportSourceRoutine.cs" />
+    <Compile Include="Utils\Cli\Routine.cs" />
+    <Compile Include="Utils\Cli\ShowImportsRoutine.cs" />
+    <Compile Include="Utils\Cli\ShowRulesRoutine.cs" />
+    <Compile Include="Utils\Cli\ShowSourcesRoutine.cs" />
+    <Compile Include="Utils\LongEqualityComparer.cs" />
+    <Compile Include="Utils\InvertedControlDictionary.cs" />
+    <Compile Include="Utils\Log.cs" />
+    <Compile Include="Utils\ManagedCircleBuffer.cs" />
+    <Compile Include="Utils\StringGenerator.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="x64\SQLite.Interop.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="x86\SQLite.Interop.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <None Include="App.config">
+      <SubType>Designer</SubType>
+    </None>
+    <Content Include="NLog.config">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <None Include="NLog.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="packages.config">
+      <SubType>Designer</SubType>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Exchange\CsvFormat\" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <PropertyGroup>
+    <PostBuildEvent>
+    </PostBuildEvent>
+  </PropertyGroup>
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+  <Import Project="$(KINDOFMAGIC)\KindOfMagic.targets" />
+</Project>

@@ -1,0 +1,201 @@
+﻿<Page
+	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+	xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+	xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+	xmlns:controls="http://metro.mahapps.com/winfx/xaml/controls"
+    xmlns:ViewModels="clr-namespace:AutoCatalogWpf.ViewModels"
+    xmlns:utils="clr-namespace:AutoCatalogWpf.Utils"
+    xmlns:search="clr-namespace:AutoCatalogWpf.ViewModels.Search"
+    x:Class="AutoCatalogWpf.Views.Search.PartItemDetailsPage" 
+    mc:Ignorable="d" 
+    d:DesignHeight="400" d:DesignWidth="600"
+	Title="PartItemDetailsPage"
+    Background="White">
+
+    <Page.DataContext>
+        <search:PartItemViewModel/>
+    </Page.DataContext>
+
+    <Page.Resources>
+        <BooleanToVisibilityConverter x:Key="BooleanToVisibility" />
+    </Page.Resources>
+
+    <Grid Margin="30,10">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="60"/>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="1*"/>
+        </Grid.RowDefinitions>
+
+        <StackPanel Orientation="Horizontal" Margin="0,0,0,15" Grid.Row="0">
+            <Button Style="{DynamicResource MetroCircleButtonStyle}" Height="36" Width="36" Margin="0,5,5,0"
+				Command="{Binding ClosePage}">
+                <Rectangle Width="18" Height="18">
+                    <Rectangle.Fill>
+                        <VisualBrush Visual="{DynamicResource appbar_arrow_left}" />
+                    </Rectangle.Fill>
+                </Rectangle>
+            </Button>
+            <Label FontSize="36" Content="ПОДРОБНО" Padding="0,0,0,0" Foreground="{StaticResource AccentColorBrush}"/>
+        </StackPanel>
+
+        <StackPanel Grid.Row="1">
+            <TextBlock FontWeight="Light" Padding="5,5,0,15" TextWrapping="Wrap" Foreground="{StaticResource GrayBrush2}">
+                Подробные сведения о <Run Text="{Binding PartNumber}" />
+            </TextBlock>
+        </StackPanel>
+        
+        <StackPanel Grid.Row="2">
+            <Grid Margin="0,2">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="80"/>
+                    <ColumnDefinition Width="1*"/>
+                </Grid.ColumnDefinitions>
+                <TextBlock Grid.Column="0" Text="Название:" HorizontalAlignment="Right" FontWeight="Light" Foreground="{StaticResource DisabledMenuItemForeground}"/>
+                <TextBlock Grid.Column="1" Padding="5,0" Text="{Binding Name}" HorizontalAlignment="Left" Foreground="#333" FontWeight="Bold"/>
+            </Grid>
+            <Grid Margin="0,2">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="80"/>
+                    <ColumnDefinition Width="1*"/>
+                </Grid.ColumnDefinitions>
+                <TextBlock Grid.Column="0" Text="Номер:" HorizontalAlignment="Right" FontWeight="Light" Foreground="{StaticResource DisabledMenuItemForeground}"/>
+                <TextBlock Grid.Column="1" Padding="5,0" Text="{Binding PartNumber}" HorizontalAlignment="Left" Foreground="#333" FontWeight="Bold"/>
+            </Grid>
+            <Grid Margin="0,2">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="80"/>
+                    <ColumnDefinition Width="1*"/>
+                </Grid.ColumnDefinitions>
+                <TextBlock Grid.Column="0" Text="Бренд:" HorizontalAlignment="Right" FontWeight="Light" Foreground="{StaticResource DisabledMenuItemForeground}"/>
+                <TextBlock Grid.Column="1" Padding="5,0" Text="{Binding Brand}" HorizontalAlignment="Left" Foreground="#333" FontWeight="Bold"/>
+            </Grid>
+            <Grid Margin="0,15,0,2" Visibility="{Binding HasDistributor, Converter={StaticResource BooleanToVisibility}}">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="80"/>
+                    <ColumnDefinition Width="1*"/>
+                </Grid.ColumnDefinitions>
+                <TextBlock Grid.Column="0" Text="Поставщик:" HorizontalAlignment="Right" FontWeight="Light" Foreground="{StaticResource DisabledMenuItemForeground}"/>
+                <TextBlock Grid.Column="1" Padding="5,0" HorizontalAlignment="Left" Foreground="#333">
+                    <Hyperlink Command="{Binding InvokeSource}" IsEnabled="{Binding HasSource}">
+                        <Run Text="{Binding Distributor}"/>
+                    </Hyperlink>
+                </TextBlock>
+            </Grid>
+            <Grid Margin="0,2">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="80"/>
+                    <ColumnDefinition Width="1*"/>
+                </Grid.ColumnDefinitions>
+                <TextBlock Grid.Column="0" Text="Цена:" HorizontalAlignment="Right" FontWeight="Light" Foreground="{StaticResource DisabledMenuItemForeground}"/>
+                <TextBlock Grid.Column="1" Padding="5,0" Text="{Binding Price, StringFormat={}{0:F2} руб.}" HorizontalAlignment="Left" Foreground="#333"/>
+            </Grid>
+            <Grid Margin="0,2">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="80"/>
+                    <ColumnDefinition Width="1*"/>
+                </Grid.ColumnDefinitions>
+                <TextBlock Grid.Column="0" Text="Наличие:" HorizontalAlignment="Right" FontWeight="Light" Foreground="{StaticResource DisabledMenuItemForeground}"/>
+                <TextBlock Grid.Column="1" Padding="5,0" Text="{Binding Balance, StringFormat={}{0:#.##}}" HorizontalAlignment="Left" Foreground="#333"/>
+            </Grid>
+            <Grid Margin="0,2" Visibility="{Binding HasCommentary, Converter={StaticResource BooleanToVisibility}}">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="80"/>
+                    <ColumnDefinition Width="1*"/>
+                </Grid.ColumnDefinitions>
+                <TextBlock Grid.Column="0" Text="Примечания:" HorizontalAlignment="Right" FontWeight="Light" Foreground="{StaticResource DisabledMenuItemForeground}"/>
+                <TextBlock Grid.Column="1" Padding="5,0" Text="{Binding Commentary}" HorizontalAlignment="Left" Foreground="#333" FontStyle="Italic"/>
+            </Grid>
+        </StackPanel>
+        
+        <StackPanel Grid.Row="3" Margin="5,10,5,5">
+            <TextBlock FontSize="14" Foreground="{StaticResource AccentColorBrush}" Visibility="{Binding HasNoAnalogs, Converter={StaticResource BooleanToVisibility}}">
+                АНАЛОГИ ОТСУТСТВУЮТ
+            </TextBlock>
+            <StackPanel Margin="0,30" Visibility="{Binding IsSearchingAnalogs, Converter={StaticResource BooleanToVisibility}}">
+                <controls:ProgressRing IsActive="{Binding IsSearchingAnalogs}" Width="30" Height="30" />
+                <TextBlock FontWeight="ExtraLight" Foreground="{StaticResource AccentColorBrush}" HorizontalAlignment="Center" Padding="0,10,0,0">
+                    поиск аналогов
+                </TextBlock>
+            </StackPanel>
+        </StackPanel>
+
+        <ScrollViewer Grid.Row="4" VerticalScrollBarVisibility="Auto">
+            <StackPanel>
+                <StackPanel Visibility="{Binding HasRealAnalogs, Converter={StaticResource BooleanToVisibility}}">
+                    <TextBlock FontSize="14" Foreground="{StaticResource AccentColorBrush}">АНАЛОГИ В НАЛИЧИИ:</TextBlock>
+                    <TextBlock FontWeight="Light" Padding="0,2,0,7" TextWrapping="Wrap">
+                        Для просмотра подробностей по аналогу дважды кликните или нажмите <Run FontWeight="Bold">Enter</Run> на выбранном элементе списка.
+                    </TextBlock>
+                    <ListBox 
+                        ItemsSource="{Binding RealAnalogs}"
+			            SelectedValue="{Binding SelectedAnalog}"
+                        Name="RealAnalogsList"
+                        SelectionChanged="RealAnalogsList_OnSelected"
+			            Background="{x:Null}"
+			            Grid.IsSharedSizeScope="True"
+                        MouseDoubleClick="RealAnalogsList_OnMouseDoubleClick"
+                        Margin="0,0,0,15">
+                        <ListBox.ItemTemplate>
+                            <DataTemplate>
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="3*" MinWidth="120" MaxWidth="180" SharedSizeGroup="g1"/>
+                                        <ColumnDefinition Width="3*" MinWidth="110" MaxWidth="180"  SharedSizeGroup="g5"/>
+                                        <ColumnDefinition Width="1*" MinWidth="200" />
+                                        <ColumnDefinition Width="1*" MinWidth="70" MaxWidth="100" SharedSizeGroup="g2"/>
+                                        <ColumnDefinition Width="1*" MinWidth="70" MaxWidth="100" SharedSizeGroup="g3"/>
+                                    </Grid.ColumnDefinitions>
+                                    <StackPanel Grid.Column="0" Margin="2,6">
+                                        <TextBlock Text="НОМЕР" FontSize="9" Visibility="{Binding IsSelected, Converter={StaticResource BooleanToVisibility}}" />
+                                        <TextBlock  Text="{Binding PartNumber}"/>
+                                    </StackPanel>
+                                    <StackPanel Grid.Column="1" Margin="2,6">
+                                        <TextBlock Text="БРЕНД" FontSize="9" Visibility="{Binding IsSelected, Converter={StaticResource BooleanToVisibility}}" />
+                                        <TextBlock  Text="{Binding Brand}"/>
+                                    </StackPanel>
+                                    <StackPanel Grid.Column="2" Margin="2,6">
+                                        <TextBlock Text="НАИМЕНОВАНИЕ" FontSize="9" Visibility="{Binding IsSelected, Converter={StaticResource BooleanToVisibility}}" />
+                                        <TextBlock  Text="{Binding Name}"/>
+                                    </StackPanel>
+                                    <StackPanel Grid.Column="3" Margin="2,6">
+                                        <TextBlock Text="ЦЕНА" FontSize="9" Visibility="{Binding IsSelected, Converter={StaticResource BooleanToVisibility}}" />
+                                        <TextBlock Text="{Binding Price, StringFormat={}{0:F2}}"/>
+                                    </StackPanel>
+                                    <StackPanel Grid.Column="4" Margin="2,6">
+                                        <TextBlock Text="СКЛАД" FontSize="9" Visibility="{Binding IsSelected, Converter={StaticResource BooleanToVisibility}}" />
+                                        <TextBlock Text="{Binding Balance, StringFormat={}{0:#.##}}"/>
+                                    </StackPanel>
+                                </Grid>
+                            </DataTemplate>
+                        </ListBox.ItemTemplate>
+                    </ListBox>
+                </StackPanel>
+                <StackPanel Visibility="{Binding HasVirtualAnalogs, Converter={StaticResource BooleanToVisibility}}">
+                    <TextBlock FontSize="14" Foreground="{StaticResource AccentColorBrush}">ИЗВЕСТНЫЕ АНАЛОГИ:</TextBlock>
+                    <TextBlock Foreground="#666" FontWeight="Light" Padding="0,2,0,7" TextWrapping="Wrap">
+                        Для указанных ниже номеров нет подробных сведений.
+                    </TextBlock>
+                    <ListBox 
+                        Name="VirtualAnalogsList"
+                        SelectionChanged="VirtualAnalogsList_OnSelected"
+                        ItemsSource="{Binding VirtualAnalogs}"
+			            Background="{x:Null}"
+			            Grid.IsSharedSizeScope="True">
+                        <ListBox.ItemTemplate>
+                            <DataTemplate>
+                                <StackPanel Margin="2,6">
+                                    <TextBlock Foreground="#333" Text="НОМЕР" FontSize="9" Visibility="{Binding IsSelected, Converter={StaticResource BooleanToVisibility}}" />
+                                    <TextBlock  Text="{Binding PartNumber}"/>
+                                </StackPanel>
+                            </DataTemplate>
+                        </ListBox.ItemTemplate>
+                    </ListBox>
+                </StackPanel>
+            </StackPanel>
+        </ScrollViewer>
+    </Grid>
+</Page>

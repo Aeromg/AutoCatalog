@@ -1,0 +1,130 @@
+﻿<Page
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:controls="http://metro.mahapps.com/winfx/xaml/controls"
+      xmlns:System="clr-namespace:System;assembly=mscorlib"
+      xmlns:exchange="clr-namespace:AutoCatalogLib.Exchange;assembly=AutoCatalogLib"
+      xmlns:utils="clr-namespace:AutoCatalogWpf.Utils"
+      xmlns:ViewModels="clr-namespace:AutoCatalogWpf.ViewModels"
+      xmlns:converters="clr-namespace:AutoCatalogWpf.ViewModels.Converters"
+      x:Class="AutoCatalogWpf.Views.Converters.ConverterEditPage"
+      mc:Ignorable="d" 
+      d:DesignHeight="400" d:DesignWidth="600"
+      Title="ConverterEditPage"
+      Background="White">
+
+    <Page.Resources>
+        <ObjectDataProvider x:Key="GeneralizedTypesData" 
+                            MethodName="GetValues"
+                            ObjectType="{x:Type System:Enum}">
+            <ObjectDataProvider.MethodParameters>
+                <x:Type TypeName="exchange:GeneralizedType"/>
+            </ObjectDataProvider.MethodParameters>
+        </ObjectDataProvider>
+        <utils:GeneralizedTypeToStringConverter x:Key="GeneralizedTypeToString" />
+    </Page.Resources>
+
+    <Page.DataContext>
+        <converters:ConverterViewModel/>
+    </Page.DataContext>
+
+    <Grid Margin="30,10">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="60"/>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="1*"/>
+            <RowDefinition Height="auto"/>
+        </Grid.RowDefinitions>
+
+        <StackPanel Orientation="Horizontal" Margin="0,0,0,15" Grid.Row="0">
+            <Button Style="{DynamicResource MetroCircleButtonStyle}" Height="36" Width="36" Margin="0,5,5,0"
+				Command="{Binding Cancel}">
+                <Rectangle Width="18" Height="18">
+                    <Rectangle.Fill>
+                        <VisualBrush Visual="{DynamicResource appbar_arrow_left}" />
+                    </Rectangle.Fill>
+                </Rectangle>
+            </Button>
+            <Label FontSize="36" Content="КОНВЕРТЕР" Padding="0,0,0,0" Foreground="{StaticResource AccentColorBrush}"/>
+        </StackPanel>
+        <TextBlock Grid.Row="1" FontWeight="Light" Padding="5,5,0,15" TextWrapping="Wrap" Foreground="{StaticResource GrayBrush2}"><Run Text="Заполните или измените аттрибуты конвертера и опишите алгоритм его работы. Для описания алгоритма необходимы начальные знания языка программирования "/><Hyperlink NavigateUri="https://developer.mozilla.org/en-US/docs/Web/JavaScript"><Run Text="JavaScript"/></Hyperlink><Run Text="."/></TextBlock>
+        
+        <StackPanel Grid.Row="2">
+            <Grid Margin="0,0,0,5">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="80"/>
+                    <ColumnDefinition Width="1*"/>
+                </Grid.ColumnDefinitions>
+                <Label Grid.Column="0" Content="Имя:" HorizontalAlignment="Right" Foreground="{StaticResource GrayBrush2}"/>
+                <TextBox Grid.Column="1"
+                         controls:TextboxHelper.ClearTextButton="True" 
+                         controls:TextboxHelper.SelectAllOnFocus="True"
+                         controls:TextboxHelper.Watermark="Короткое название"
+                         Text="{Binding Name, UpdateSourceTrigger=PropertyChanged}"/>
+            </Grid>
+
+            <Grid Margin="0,0,0,5">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="80"/>
+                    <ColumnDefinition Width="1*"/>
+                </Grid.ColumnDefinitions>
+                <Label Grid.Column="0" Content="Описание:" HorizontalAlignment="Right" Foreground="{StaticResource GrayBrush2}"/>
+                <TextBox Grid.Column="1"
+                         controls:TextboxHelper.ClearTextButton="True" 
+                         controls:TextboxHelper.SelectAllOnFocus="True"
+                         controls:TextboxHelper.Watermark="Подробное описание"
+                         Text="{Binding Description, UpdateSourceTrigger=PropertyChanged}"/>
+            </Grid>
+
+            <Grid Margin="0,0,0,5">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="80"/>
+                    <ColumnDefinition Width="1*"/>
+                </Grid.ColumnDefinitions>
+                <Label Grid.Column="0" Content="Значение:" HorizontalAlignment="Right" Foreground="{StaticResource GrayBrush2}"/>
+                <ComboBox Grid.Column="1"
+					ItemsSource="{Binding Source={StaticResource GeneralizedTypesData}}"
+					SelectedItem="{Binding GeneralizedType}">
+                    <ComboBox.ItemTemplate>
+                        <DataTemplate>
+                            <Label Content="{Binding Converter={StaticResource GeneralizedTypeToString}}"/>
+                        </DataTemplate>
+                    </ComboBox.ItemTemplate>
+                </ComboBox>
+            </Grid>
+        </StackPanel>
+        <Grid Grid.Row="3">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="80"/>
+                <ColumnDefinition Width="1*"/>
+            </Grid.ColumnDefinitions>
+            <Label Grid.Column="0" Content="Алгоритм:" HorizontalAlignment="Right" Foreground="{StaticResource GrayBrush2}"/>
+            <Grid Grid.Column="1">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="1*"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+                <TextBox Grid.Row="0" 
+                         AcceptsReturn="True" 
+                         TextWrapping="WrapWithOverflow" FontFamily="Courier New"
+                         Padding="4"
+                         VerticalScrollBarVisibility="Auto"
+                         HorizontalScrollBarVisibility="Auto"
+                         Text="{Binding UserScript, UpdateSourceTrigger=PropertyChanged}"/>
+                <TextBlock Grid.Row="1" FontWeight="Light" Padding="0,3,0,12" TextWrapping="Wrap" Foreground="{StaticResource GrayBrush2}" FontSize="10"><Run Text="Начальное значение содержится в переменной "/><Run FontWeight="Bold" Text="input"/><Run Text=". По окончанию преобразований, результат необходимо записать в переменную "/><Run FontWeight="Bold" Text="output"/><Run Text="."/></TextBlock>
+            </Grid>
+        </Grid>
+        <Grid Grid.Row="4">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="1*"/>
+                <ColumnDefinition Width="100"/>
+                <ColumnDefinition Width="100"/>
+            </Grid.ColumnDefinitions>
+            <Button Grid.Column="1" Content="Отменить" Margin="8,4,0,4" Command="{Binding Cancel}"/>
+            <Button Grid.Column="2" Content="Записать" Margin="8,4,0,4" Command="{Binding Save}"/>
+        </Grid>
+    </Grid>
+</Page>

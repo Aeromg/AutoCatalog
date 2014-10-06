@@ -1,0 +1,599 @@
+﻿<Page
+			xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+			xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+			xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+			xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+			xmlns:controls="http://metro.mahapps.com/winfx/xaml/controls"
+			xmlns:ViewModels="clr-namespace:AutoCatalogWpf.ViewModels"
+			xmlns:business="clr-namespace:AutoCatalogLib.Business;assembly=AutoCatalogLib"
+			xmlns:exchange="clr-namespace:AutoCatalogLib.Exchange;assembly=AutoCatalogLib"
+			xmlns:utils="clr-namespace:AutoCatalogWpf.Utils"
+			xmlns:rules="clr-namespace:AutoCatalogWpf.ViewModels.Rules"
+			x:Class="AutoCatalogWpf.Views.Rules.ExcelRuleEditPage"
+			mc:Ignorable="d" 
+			d:DesignHeight="600" d:DesignWidth="1000"
+		Title="ExcelRuleEditPage"
+			Background="White">
+
+    <Page.Resources>
+        <BooleanToVisibilityConverter x:Key="BooleanToVisibility" />
+        <utils:NumbersValidationRule MustBePositive="True" x:Key="PositiveInteger" />
+    </Page.Resources>
+
+    <Page.DataContext>
+        <rules:ExcelRuleViewModel/>
+    </Page.DataContext>
+    
+    <Grid Margin="30,10">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="60"/>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="1*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <StackPanel Orientation="Horizontal" Margin="0,0,0,15" Grid.Row="0">
+            <Button Style="{DynamicResource MetroCircleButtonStyle}" Height="36" Width="36" Margin="0,5,5,0"
+				Command="{Binding Cancel}">
+                <Rectangle Width="18" Height="18">
+                    <Rectangle.Fill>
+                        <VisualBrush Visual="{DynamicResource appbar_arrow_left}" />
+                    </Rectangle.Fill>
+                </Rectangle>
+            </Button>
+            <Label FontSize="36" Content="ПРАВИЛО" Padding="0,0,0,0" Foreground="{StaticResource AccentColorBrush}"/>
+        </StackPanel>
+        <TextBlock Grid.Row="1" FontWeight="Light" Padding="5,5,0,15" TextWrapping="Wrap" Foreground="{StaticResource GrayBrush2}">
+            Создание или редактирование правила импорта. Заполните или измените значения полей правила. <LineBreak />
+            В качестве номера колонки необходимо вводить относительный номер, учитывая отступы для всей страницы. Индексация начинается с еденицы. <LineBreak />
+            Придумайте правилу короткий идентификатор — это поможет указывать его при автоматизации обновления данных через командную строку Windows.
+        </TextBlock>
+
+        <ScrollViewer Grid.Row="2" VerticalScrollBarVisibility="Auto">
+            <StackPanel>
+                <WrapPanel Visibility="Visible">
+                    <StackPanel DataContext="{Binding NameField}" Margin="0,0,10,10" MaxWidth="500" MinWidth="300">
+                        <TextBlock FontSize="14" Foreground="{StaticResource AccentColorBrush}" Text="НАИМЕНОВАНИЕ" Padding="5"/>
+                        <Grid Margin="0,3">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="120"/>
+                                <ColumnDefinition Width="1*"/>
+                            </Grid.ColumnDefinitions>
+                            <Label Grid.Column="0" Content="Номер колонки:" HorizontalAlignment="Right" />
+                            <TextBox Grid.Column="1" Margin="8,0,0,0"
+                                     controls:TextboxHelper.ClearTextButton="True" 
+                                     controls:TextboxHelper.SelectAllOnFocus="True"
+                                     controls:TextboxHelper.Watermark="Пример: 1">
+                                <TextBox.Text>
+                                    <Binding Path="Index" UpdateSourceTrigger="PropertyChanged">
+                                        <Binding.ValidationRules>
+                                            <utils:NumbersValidationRule MustBePositive="True" />
+                                        </Binding.ValidationRules>
+                                    </Binding>
+                                </TextBox.Text>
+                            </TextBox>
+                        </Grid>
+
+                        <Grid Margin="0,2">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="120"/>
+                                <ColumnDefinition Width="1*"/>
+                            </Grid.ColumnDefinitions>
+                            <Label Grid.Column="0" Content="Конвертер:" HorizontalAlignment="Right" />
+                            <ComboBox Grid.Column="1" Margin="8,0,0,0"
+																	ItemsSource="{Binding CompatableFormatters}"
+																	SelectedItem="{Binding Formatter}">
+                                <ComboBox.ItemTemplate>
+                                    <DataTemplate>
+                                        <Label Content="{Binding Name}"/>
+                                    </DataTemplate>
+                                </ComboBox.ItemTemplate>
+                            </ComboBox>
+                        </Grid>
+                        <Grid Margin="0,8,0,0" Visibility="{Binding FreeField, Converter={StaticResource BooleanToVisibility}}">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="1*"/>
+                                <ColumnDefinition Width="1*"/>
+                            </Grid.ColumnDefinitions>
+                            <Grid Margin="0,0" Grid.Column="0">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="120"/>
+                                    <ColumnDefinition Width="1*"/>
+                                </Grid.ColumnDefinitions>
+                                <Label Grid.Column="0" Content="Обязательно:" HorizontalAlignment="Right" />
+                                <CheckBox Grid.Column="1" Margin="8,0,0,0" IsChecked="{Binding Required}"/>
+                            </Grid>
+                            <Grid Margin="0,0" Grid.Column="1">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="120"/>
+                                    <ColumnDefinition Width="1*"/>
+                                </Grid.ColumnDefinitions>
+                                <Label Grid.Column="0" Content="Активно:" HorizontalAlignment="Right" />
+                                <CheckBox Grid.Column="1" Margin="8,0,-4,0" IsChecked="{Binding Active}"/>
+                            </Grid>
+                        </Grid>
+                    </StackPanel>
+
+                    <StackPanel DataContext="{Binding PartNumberField}" Margin="0,0,10,10" MaxWidth="500" MinWidth="300">
+                        <TextBlock FontSize="14" Foreground="{StaticResource AccentColorBrush}" Text="НОМЕР" Padding="5"/>
+                        <Grid Margin="0,3">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="120"/>
+                                <ColumnDefinition Width="1*"/>
+                            </Grid.ColumnDefinitions>
+                            <Label Grid.Column="0" Content="Номер колонки:" HorizontalAlignment="Right" />
+                            <TextBox Grid.Column="1" Margin="8,0,0,0"
+                                     controls:TextboxHelper.ClearTextButton="True" 
+                                     controls:TextboxHelper.SelectAllOnFocus="True"
+                                     controls:TextboxHelper.Watermark="Пример: 3">
+                                <TextBox.Text>
+                                    <Binding Path="Index" UpdateSourceTrigger="PropertyChanged">
+                                        <Binding.ValidationRules>
+                                            <utils:NumbersValidationRule MustBePositive="True" />
+                                        </Binding.ValidationRules>
+                                    </Binding>
+                                </TextBox.Text>
+                            </TextBox>
+                        </Grid>
+
+                        <Grid Margin="0,2">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="120"/>
+                                <ColumnDefinition Width="1*"/>
+                            </Grid.ColumnDefinitions>
+                            <Label Grid.Column="0" Content="Конвертер:" HorizontalAlignment="Right" />
+                            <ComboBox Grid.Column="1" Margin="8,0,0,0"
+																	ItemsSource="{Binding CompatableFormatters}"
+																	SelectedItem="{Binding Formatter}">
+                                <ComboBox.ItemTemplate>
+                                    <DataTemplate>
+                                        <Label Content="{Binding Name}"/>
+                                    </DataTemplate>
+                                </ComboBox.ItemTemplate>
+                            </ComboBox>
+                        </Grid>
+
+                        <Grid Margin="0,8,0,0" Visibility="{Binding FreeField, Converter={StaticResource BooleanToVisibility}}">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="1*"/>
+                                <ColumnDefinition Width="1*"/>
+                            </Grid.ColumnDefinitions>
+                            <Grid Margin="0,0" Grid.Column="0">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="120"/>
+                                    <ColumnDefinition Width="1*"/>
+                                </Grid.ColumnDefinitions>
+                                <Label Grid.Column="0" Content="Обязательно:" HorizontalAlignment="Right" />
+                                <CheckBox Grid.Column="1" Margin="8,0,0,0" IsChecked="{Binding Required}"/>
+                            </Grid>
+                            <Grid Margin="0,0" Grid.Column="1">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="120"/>
+                                    <ColumnDefinition Width="1*"/>
+                                </Grid.ColumnDefinitions>
+                                <Label Grid.Column="0" Content="Активно:" HorizontalAlignment="Right" />
+                                <CheckBox Grid.Column="1" Margin="8,0,-4,0" IsChecked="{Binding Active}"/>
+                            </Grid>
+                        </Grid>
+                    </StackPanel>
+
+                    <StackPanel DataContext="{Binding PriceField}" Margin="0,0,10,10" MaxWidth="500" MinWidth="300">
+                        <TextBlock FontSize="14" Foreground="{StaticResource AccentColorBrush}" Text="ЦЕНА" Padding="5"/>
+                        <Grid Margin="0,3">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="120"/>
+                                <ColumnDefinition Width="1*"/>
+                            </Grid.ColumnDefinitions>
+                            <Label Grid.Column="0" Content="Номер колонки:" HorizontalAlignment="Right" />
+                            <TextBox Grid.Column="1" Margin="8,0,0,0"
+                                     controls:TextboxHelper.ClearTextButton="True" 
+                                     controls:TextboxHelper.SelectAllOnFocus="True"
+                                     controls:TextboxHelper.Watermark="Пример: 4">
+                                <TextBox.Text>
+                                    <Binding Path="Index" UpdateSourceTrigger="PropertyChanged">
+                                        <Binding.ValidationRules>
+                                            <utils:NumbersValidationRule MustBePositive="True" />
+                                        </Binding.ValidationRules>
+                                    </Binding>
+                                </TextBox.Text>
+                            </TextBox>
+                        </Grid>
+
+                        <Grid Margin="0,2">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="120"/>
+                                <ColumnDefinition Width="1*"/>
+                            </Grid.ColumnDefinitions>
+                            <Label Grid.Column="0" Content="Конвертер:" HorizontalAlignment="Right" />
+                            <ComboBox Grid.Column="1" Margin="8,0,0,0"
+																	ItemsSource="{Binding CompatableFormatters}"
+																	SelectedItem="{Binding Formatter}">
+                                <ComboBox.ItemTemplate>
+                                    <DataTemplate>
+                                        <Label Content="{Binding Name}"/>
+                                    </DataTemplate>
+                                </ComboBox.ItemTemplate>
+                            </ComboBox>
+                        </Grid>
+
+                        <Grid Margin="0,8,0,0" Visibility="{Binding FreeField, Converter={StaticResource BooleanToVisibility}}">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="1*"/>
+                                <ColumnDefinition Width="1*"/>
+                            </Grid.ColumnDefinitions>
+                            <Grid Margin="0,0" Grid.Column="0">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="120"/>
+                                    <ColumnDefinition Width="1*"/>
+                                </Grid.ColumnDefinitions>
+                                <Label Grid.Column="0" Content="Обязательно:" HorizontalAlignment="Right" />
+                                <CheckBox Grid.Column="1" Margin="8,0,0,0" IsChecked="{Binding Required}"/>
+                            </Grid>
+                            <Grid Margin="0,0" Grid.Column="1">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="120"/>
+                                    <ColumnDefinition Width="1*"/>
+                                </Grid.ColumnDefinitions>
+                                <Label Grid.Column="0" Content="Активно:" HorizontalAlignment="Right" />
+                                <CheckBox Grid.Column="1" Margin="8,0,-4,0" IsChecked="{Binding Active}"/>
+                            </Grid>
+                        </Grid>
+                    </StackPanel>
+
+                    <StackPanel DataContext="{Binding BrandField}" Margin="0,0,10,10" MaxWidth="500" MinWidth="300">
+                        <TextBlock FontSize="14" Foreground="{StaticResource AccentColorBrush}" Text="БРЕНД" Padding="5"/>
+                        <Grid Margin="0,3">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="120"/>
+                                <ColumnDefinition Width="1*"/>
+                            </Grid.ColumnDefinitions>
+                            <Label Grid.Column="0" Content="Номер колонки:" HorizontalAlignment="Right" />
+                            <TextBox Grid.Column="1" Margin="8,0,0,0"
+                                     controls:TextboxHelper.ClearTextButton="True" 
+                                     controls:TextboxHelper.SelectAllOnFocus="True"
+                                     controls:TextboxHelper.Watermark="Пример: 2">
+                                <TextBox.Text>
+                                    <Binding Path="Index" UpdateSourceTrigger="PropertyChanged">
+                                        <Binding.ValidationRules>
+                                            <utils:NumbersValidationRule MustBePositive="True" />
+                                        </Binding.ValidationRules>
+                                    </Binding>
+                                </TextBox.Text>
+                            </TextBox>
+                        </Grid>
+
+                        <Grid Margin="0,2">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="120"/>
+                                <ColumnDefinition Width="1*"/>
+                            </Grid.ColumnDefinitions>
+                            <Label Grid.Column="0" Content="Конвертер:" HorizontalAlignment="Right" />
+                            <ComboBox Grid.Column="1" Margin="8,0,0,0"
+																	ItemsSource="{Binding CompatableFormatters}"
+																	SelectedItem="{Binding Formatter}">
+                                <ComboBox.ItemTemplate>
+                                    <DataTemplate>
+                                        <Label Content="{Binding Name}"/>
+                                    </DataTemplate>
+                                </ComboBox.ItemTemplate>
+                            </ComboBox>
+                        </Grid>
+
+                        <Grid Margin="0,8,0,0" Visibility="{Binding FreeField, Converter={StaticResource BooleanToVisibility}}">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="1*"/>
+                                <ColumnDefinition Width="1*"/>
+                            </Grid.ColumnDefinitions>
+                            <Grid Margin="0,0" Grid.Column="0">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="120"/>
+                                    <ColumnDefinition Width="1*"/>
+                                </Grid.ColumnDefinitions>
+                                <Label Grid.Column="0" Content="Обязательно:" HorizontalAlignment="Right" />
+                                <CheckBox Grid.Column="1" Margin="8,0,0,0" IsChecked="{Binding Required}"/>
+                            </Grid>
+                            <Grid Margin="0,0" Grid.Column="1">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="120"/>
+                                    <ColumnDefinition Width="1*"/>
+                                </Grid.ColumnDefinitions>
+                                <Label Grid.Column="0" Content="Активно:" HorizontalAlignment="Right" />
+                                <CheckBox Grid.Column="1" Margin="8,0,-4,0" IsChecked="{Binding Active}"/>
+                            </Grid>
+                        </Grid>
+                    </StackPanel>
+
+                    <StackPanel DataContext="{Binding AnalogsField}" Margin="0,0,10,10" MaxWidth="500" MinWidth="300">
+                        <TextBlock FontSize="14" Foreground="{StaticResource AccentColorBrush}" Text="АНАЛОГИ" Padding="5"/>
+                        <Grid Margin="0,3">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="120"/>
+                                <ColumnDefinition Width="1*"/>
+                            </Grid.ColumnDefinitions>
+                            <Label Grid.Column="0" Content="Номер колонки:" HorizontalAlignment="Right" />
+                            <TextBox Grid.Column="1" Margin="8,0,0,0"
+                                     controls:TextboxHelper.ClearTextButton="True" 
+                                     controls:TextboxHelper.SelectAllOnFocus="True"
+                                     controls:TextboxHelper.Watermark="Пример: 6">
+                                <TextBox.Text>
+                                    <Binding Path="Index" UpdateSourceTrigger="PropertyChanged">
+                                        <Binding.ValidationRules>
+                                            <utils:NumbersValidationRule MustBePositive="True" />
+                                        </Binding.ValidationRules>
+                                    </Binding>
+                                </TextBox.Text>
+                            </TextBox>
+                        </Grid>
+
+                        <Grid Margin="0,2">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="120"/>
+                                <ColumnDefinition Width="1*"/>
+                            </Grid.ColumnDefinitions>
+                            <Label Grid.Column="0" Content="Конвертер:" HorizontalAlignment="Right" />
+                            <ComboBox Grid.Column="1" Margin="8,0,0,0"
+																	ItemsSource="{Binding CompatableFormatters}"
+																	SelectedItem="{Binding Formatter}">
+                                <ComboBox.ItemTemplate>
+                                    <DataTemplate>
+                                        <Label Content="{Binding Name}"/>
+                                    </DataTemplate>
+                                </ComboBox.ItemTemplate>
+                            </ComboBox>
+                        </Grid>
+
+                        <Grid Margin="0,8,0,0" Visibility="{Binding FreeField, Converter={StaticResource BooleanToVisibility}}">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="1*"/>
+                                <ColumnDefinition Width="1*"/>
+                            </Grid.ColumnDefinitions>
+                            <Grid Margin="0,0" Grid.Column="0">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="120"/>
+                                    <ColumnDefinition Width="1*"/>
+                                </Grid.ColumnDefinitions>
+                                <Label Grid.Column="0" Content="Обязательно:" HorizontalAlignment="Right" />
+                                <CheckBox Grid.Column="1" Margin="8,0,0,0" IsChecked="{Binding Required}"/>
+                            </Grid>
+                            <Grid Margin="0,0" Grid.Column="1">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="120"/>
+                                    <ColumnDefinition Width="1*"/>
+                                </Grid.ColumnDefinitions>
+                                <Label Grid.Column="0" Content="Активно:" HorizontalAlignment="Right" />
+                                <CheckBox Grid.Column="1" Margin="8,0,-4,0" IsChecked="{Binding Active}"/>
+                            </Grid>
+                        </Grid>
+                    </StackPanel>
+
+                    <StackPanel DataContext="{Binding BalanceField}" Margin="0,0,10,10" MaxWidth="500" MinWidth="300">
+                        <TextBlock FontSize="14" Foreground="{StaticResource AccentColorBrush}" Text="НАЛИЧИЕ" Padding="5"/>
+                        <Grid Margin="0,3">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="120"/>
+                                <ColumnDefinition Width="1*"/>
+                            </Grid.ColumnDefinitions>
+                            <Label Grid.Column="0" Content="Номер колонки:" HorizontalAlignment="Right" />
+                            <TextBox Grid.Column="1" Margin="8,0,0,0"
+                                     controls:TextboxHelper.ClearTextButton="True" 
+                                     controls:TextboxHelper.SelectAllOnFocus="True"
+                                     controls:TextboxHelper.Watermark="Пример: 5">
+                                <TextBox.Text>
+                                    <Binding Path="Index" UpdateSourceTrigger="PropertyChanged">
+                                        <Binding.ValidationRules>
+                                            <utils:NumbersValidationRule MustBePositive="True" />
+                                        </Binding.ValidationRules>
+                                    </Binding>
+                                </TextBox.Text>
+                            </TextBox>
+                        </Grid>
+
+                        <Grid Margin="0,2">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="120"/>
+                                <ColumnDefinition Width="1*"/>
+                            </Grid.ColumnDefinitions>
+                            <Label Grid.Column="0" Content="Конвертер:" HorizontalAlignment="Right" />
+                            <ComboBox Grid.Column="1" Margin="8,0,0,0"
+																	ItemsSource="{Binding CompatableFormatters}"
+																	SelectedItem="{Binding Formatter}">
+                                <ComboBox.ItemTemplate>
+                                    <DataTemplate>
+                                        <Label Content="{Binding Name}"/>
+                                    </DataTemplate>
+                                </ComboBox.ItemTemplate>
+                            </ComboBox>
+                        </Grid>
+
+                        <Grid Margin="0,8,0,0" Visibility="{Binding FreeField, Converter={StaticResource BooleanToVisibility}}">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="1*"/>
+                                <ColumnDefinition Width="1*"/>
+                            </Grid.ColumnDefinitions>
+                            <Grid Margin="0,0" Grid.Column="0">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="120"/>
+                                    <ColumnDefinition Width="1*"/>
+                                </Grid.ColumnDefinitions>
+                                <Label Grid.Column="0" Content="Обязательно:" HorizontalAlignment="Right" />
+                                <CheckBox Grid.Column="1" Margin="8,0,0,0" IsChecked="{Binding Required}"/>
+                            </Grid>
+                            <Grid Margin="0,0" Grid.Column="1">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="120"/>
+                                    <ColumnDefinition Width="1*"/>
+                                </Grid.ColumnDefinitions>
+                                <Label Grid.Column="0" Content="Активно:" HorizontalAlignment="Right" />
+                                <CheckBox Grid.Column="1" Margin="8,0,-4,0" IsChecked="{Binding Active}"/>
+                            </Grid>
+                        </Grid>
+                    </StackPanel>
+                </WrapPanel>
+                
+                <StackPanel Margin="0,15,15,0">
+                    <TextBlock FontSize="14" Foreground="{StaticResource AccentColorBrush}" Text="ПАРАМЕТРЫ ПРАВИЛА" Padding="5"/>
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="1*"/>
+                            <ColumnDefinition Width="1*"/>
+                        </Grid.ColumnDefinitions>
+                        <Grid Margin="0,0,15,5" Grid.Column="0">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="120"/>
+                                <ColumnDefinition Width="1*"/>
+                            </Grid.ColumnDefinitions>
+                            <Label Grid.Column="0" Content="Имя:" HorizontalAlignment="Right" Foreground="{StaticResource GrayBrush2}"/>
+                            <TextBox Grid.Column="1" Margin="8,0,0,0"
+                                     controls:TextboxHelper.ClearTextButton="True" 
+                                     controls:TextboxHelper.SelectAllOnFocus="True"
+                                     controls:TextboxHelper.Watermark="Простое и понятное имя">
+                                <TextBox.Text>
+                                    <Binding Path="Name" UpdateSourceTrigger="PropertyChanged">
+                                        <Binding.ValidationRules>
+                                            <utils:StringValidationRule NotEmpty="True"/>
+                                        </Binding.ValidationRules>
+                                    </Binding>
+                                </TextBox.Text>
+                            </TextBox>
+                        </Grid>
+                        <Grid Margin="15,0,0,5" Grid.Column="1">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="120"/>
+                                <ColumnDefinition Width="1*"/>
+                            </Grid.ColumnDefinitions>
+                            <Label Grid.Column="0" Content="Идентификатор:" HorizontalAlignment="Right" Foreground="{StaticResource GrayBrush2}"/>
+                            <TextBox Grid.Column="1" Margin="8,0,0,0"
+                                     IsEnabled="{Binding IsNew}"
+                                     controls:TextboxHelper.ClearTextButton="True" 
+                                     controls:TextboxHelper.SelectAllOnFocus="True"
+                                     controls:TextboxHelper.Watermark="Только латинские буквы и цифры">
+                                <TextBox.Text>
+                                    <Binding Path="Identificator" UpdateSourceTrigger="PropertyChanged">
+                                        <Binding.ValidationRules>
+                                            <utils:RuleIdentificatorValidationRule MustExists="False" />
+                                        </Binding.ValidationRules>
+                                    </Binding>
+                                </TextBox.Text>
+                            </TextBox>
+                        </Grid>
+                    </Grid>
+                    <Grid Margin="0,0,0,5">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="120"/>
+                            <ColumnDefinition Width="1*"/>
+                        </Grid.ColumnDefinitions>
+                        <Label Grid.Column="0" Content="Описание:" HorizontalAlignment="Right" Foreground="{StaticResource GrayBrush2}"/>
+                        <TextBox Grid.Column="1" 
+                                 Margin="8,0,0,0" 
+                                 controls:TextboxHelper.ClearTextButton="True" 
+                                 controls:TextboxHelper.SelectAllOnFocus="True"
+                                 controls:TextboxHelper.Watermark="Заметка или описание правила более чем одним словом">
+                            <TextBox.Text>
+                                <Binding Path="Description" UpdateSourceTrigger="PropertyChanged">
+                                    <Binding.ValidationRules>
+                                        <utils:StringValidationRule NotEmpty="True"/>
+                                    </Binding.ValidationRules>
+                                </Binding>
+                            </TextBox.Text>
+                        </TextBox>
+                    </Grid>
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="1*"/>
+                            <ColumnDefinition Width="1*"/>
+                            <ColumnDefinition Width="1*"/>
+                        </Grid.ColumnDefinitions>
+                        <Grid Margin="0,0,5,5" Grid.Column="0">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="120"/>
+                                <ColumnDefinition Width="1*"/>
+                            </Grid.ColumnDefinitions>
+                            <Label Grid.Column="0" Content="Страница:" HorizontalAlignment="Right" Foreground="{StaticResource GrayBrush2}"/>
+                            <TextBox Grid.Column="1" Margin="8,0,0,0"
+                                     controls:TextboxHelper.ClearTextButton="True" 
+                                     controls:TextboxHelper.SelectAllOnFocus="True"
+                                     controls:TextboxHelper.Watermark="Номер листа книги Excel" >
+                                <TextBox.Text>
+                                    <Binding Path="WorksheetIndex" UpdateSourceTrigger="PropertyChanged">
+                                        <Binding.ValidationRules>
+                                            <utils:NumbersValidationRule MustBeInteger="True" MustBePositive="True"/>
+                                        </Binding.ValidationRules>
+                                    </Binding>
+                                </TextBox.Text>
+                            </TextBox>
+                        </Grid>
+                        <Grid Margin="0,0,5,5" Grid.Column="1">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="120"/>
+                                <ColumnDefinition Width="1*"/>
+                            </Grid.ColumnDefinitions>
+                            <Label Grid.Column="0" Content="Пропуск строк:" HorizontalAlignment="Right" Foreground="{StaticResource GrayBrush2}"/>
+                            <TextBox Grid.Column="1" Margin="8,0,0,0"
+                                     controls:TextboxHelper.ClearTextButton="True" 
+                                     controls:TextboxHelper.SelectAllOnFocus="True"
+                                     controls:TextboxHelper.Watermark="Номер первой строки данных минус одна строка" >
+                                <TextBox.Text>
+                                    <Binding Path="RowOffset" UpdateSourceTrigger="PropertyChanged">
+                                        <Binding.ValidationRules>
+                                            <utils:NumbersValidationRule MustBeInteger="True" MustBeNotNegative="True"/>
+                                        </Binding.ValidationRules>
+                                    </Binding>
+                                </TextBox.Text>
+                            </TextBox>
+                        </Grid>
+                        <Grid Margin="5,0,0,5" Grid.Column="2">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="120"/>
+                                <ColumnDefinition Width="1*"/>
+                            </Grid.ColumnDefinitions>
+                            <Label Grid.Column="0" Content="Пропуск столбцов:" HorizontalAlignment="Right" Foreground="{StaticResource GrayBrush2}"/>
+                            <TextBox Grid.Column="1" Margin="8,0,0,0"
+                                     controls:TextboxHelper.ClearTextButton="True" 
+                                     controls:TextboxHelper.SelectAllOnFocus="True"
+                                     controls:TextboxHelper.Watermark="Номер первого столбца данных минус один столбец" >
+                                <TextBox.Text>
+                                    <Binding Path="ColumnOffset" UpdateSourceTrigger="PropertyChanged">
+                                        <Binding.ValidationRules>
+                                            <utils:NumbersValidationRule MustBeInteger="True" MustBeNotNegative="True" />
+                                        </Binding.ValidationRules>
+                                    </Binding>
+                                </TextBox.Text>
+                            </TextBox>
+                        </Grid>
+                    </Grid>
+                    <Grid Margin="0,3,0,0">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="120"/>
+                            <ColumnDefinition Width="1*"/>
+                        </Grid.ColumnDefinitions>
+                        <Label Grid.Column="0" Content="Использовать CSV:" HorizontalAlignment="Right" Foreground="{StaticResource GrayBrush2}"/>
+                        <Grid Grid.Column="1">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="30"/>
+                                <ColumnDefinition Width="1*"/>
+                            </Grid.ColumnDefinitions>
+                            <CheckBox Margin="8,0,0,0" IsChecked="{Binding UseCsvFile}" Grid.Column="0"/>
+                            <TextBlock Grid.Column="1" 
+                                       Foreground="{StaticResource GrayBrush2}" FontSize="10"
+                                       Padding="4,0" TextWrapping="Wrap"
+                                       VerticalAlignment="Center">
+                            Установка флага означает использование промежуточного файла CSV, что значительно ускоряет импорт,
+                            но может являться причиной искажения данных. Обязательно проверяйте журнал после импортирования.
+                            </TextBlock>
+                        </Grid>
+                    </Grid>
+                </StackPanel>
+            </StackPanel>
+        </ScrollViewer>
+
+        <Grid Grid.Row="3" Margin="0,0,15,0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="1*"/>
+                <ColumnDefinition Width="100"/>
+                <ColumnDefinition Width="100"/>
+            </Grid.ColumnDefinitions>
+            <Button Grid.Column="1" Content="Отменить" Margin="8,4,0,4" Command="{Binding Cancel}"/>
+            <Button Grid.Column="2" Content="Записать" Margin="8,4,0,4" Command="{Binding Save}"/>
+        </Grid>
+    </Grid>
+</Page>

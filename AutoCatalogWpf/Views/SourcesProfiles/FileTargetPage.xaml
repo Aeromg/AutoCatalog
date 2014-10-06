@@ -1,0 +1,160 @@
+﻿<Page
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:controls="http://metro.mahapps.com/winfx/xaml/controls"
+    xmlns:utils="clr-namespace:AutoCatalogWpf.Utils"
+    xmlns:sourcesProfiles="clr-namespace:AutoCatalogWpf.ViewModels.SourcesProfiles"
+    x:Class="AutoCatalogWpf.Views.SourcesProfiles.FileTargetPage"
+      mc:Ignorable="d" 
+      d:DesignHeight="400" d:DesignWidth="600"
+      Background="White"
+	Title="FileTargetPage">
+
+    <Page.DataContext>
+        <sourcesProfiles:FileImportTargetViewModel/>
+    </Page.DataContext>
+    
+    <Page.Resources>
+        <utils:ImportRuleToStringConverter x:Key="ImportRuleToString"/>
+    </Page.Resources>
+
+    <Grid Margin="30,10">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="60"/>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="1*"/>
+            <RowDefinition Height="auto"/>
+        </Grid.RowDefinitions>
+
+        <StackPanel Orientation="Horizontal" Margin="0,0,0,15" Grid.Row="0">
+            <Button Style="{DynamicResource MetroCircleButtonStyle}" Height="36" Width="36" Margin="0,5,5,0"
+				Command="{Binding Cancel}">
+                <Rectangle Width="18" Height="18">
+                    <Rectangle.Fill>
+                        <VisualBrush Visual="{DynamicResource appbar_arrow_left}" />
+                    </Rectangle.Fill>
+                </Rectangle>
+            </Button>
+            <Label FontSize="36" Content="ИСТОЧНИК" Padding="0,0,0,0" Foreground="{StaticResource AccentColorBrush}"/>
+        </StackPanel>
+        <TextBlock Grid.Row="1" FontWeight="Light" Padding="5,5,0,15" TextWrapping="Wrap" Foreground="{StaticResource GrayBrush2}"><Run Text="Укажите или измените файл или каталог и свяжите его с правилом. В качестве имени файла или пути можно использовать символы подстановки."/></TextBlock>
+
+        <StackPanel Grid.Row="2">
+            <Grid Margin="0,0,0,5">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="100"/>
+                    <ColumnDefinition Width="1*"/>
+                </Grid.ColumnDefinitions>
+                <Label Grid.Column="0" Content="Поставщик:" HorizontalAlignment="Right" Foreground="{StaticResource GrayBrush2}"/>
+                <TextBox Grid.Column="1" 
+                         controls:TextboxHelper.ClearTextButton="True" 
+                         controls:TextboxHelper.SelectAllOnFocus="True"
+                         controls:TextboxHelper.Watermark="Имя поставщика для отображения в подробностях элемента">
+                    <TextBox.Text>
+                        <Binding Path="Distributor" UpdateSourceTrigger="PropertyChanged">
+                            <Binding.ValidationRules>
+                                <utils:StringValidationRule NotEmpty="True"/>
+                            </Binding.ValidationRules>
+                        </Binding>
+                    </TextBox.Text>
+                </TextBox>
+            </Grid>
+            <Grid Margin="0,0,0,5">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="100"/>
+                    <ColumnDefinition Width="1*"/>
+                </Grid.ColumnDefinitions>
+                <Label Grid.Column="0" Content="Идентификатор:" HorizontalAlignment="Right" Foreground="{StaticResource GrayBrush2}"/>
+                <TextBox Grid.Column="1" 
+                         controls:TextboxHelper.ClearTextButton="True" 
+                         controls:TextboxHelper.SelectAllOnFocus="True"
+                         controls:TextboxHelper.Watermark="Только латинские буквы в нижнем регистре и цифры">
+                    <TextBox.Text>
+                        <Binding Path="Transaction" UpdateSourceTrigger="PropertyChanged">
+                            <Binding.ValidationRules>
+                                <utils:RuleIdentificatorValidationRule DoNotCheckExists="True"/>
+                            </Binding.ValidationRules>
+                        </Binding>
+                    </TextBox.Text>
+                </TextBox>
+            </Grid>
+            <Grid Margin="0,0,0,5">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="100"/>
+                    <ColumnDefinition Width="1*"/>
+                    <ColumnDefinition Width="90"/>
+                </Grid.ColumnDefinitions>
+                <Label Grid.Column="0" Content="Файл:" HorizontalAlignment="Right" Foreground="{StaticResource GrayBrush2}"/>
+                <TextBox Grid.Column="1" 
+                         controls:TextboxHelper.ClearTextButton="True" 
+                         controls:TextboxHelper.SelectAllOnFocus="True"
+                         controls:TextboxHelper.Watermark="Путь к файлу, каталогу или маска файла">
+                    <TextBox.Text>
+                        <Binding Path="FilePath" UpdateSourceTrigger="PropertyChanged">
+                            <Binding.ValidationRules>
+                                <utils:FilePathValidationRule MustBeNotEmpty="True"/>
+                            </Binding.ValidationRules>
+                        </Binding>
+                    </TextBox.Text>
+                </TextBox>
+                <Button Grid.Column="2" Content="Обзор" Margin="5,0,0,0"
+                        Command="{Binding BrowseFile}"/>
+            </Grid>
+            <Grid Margin="0,0,0,5">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="100"/>
+                    <ColumnDefinition Width="1*"/>
+                </Grid.ColumnDefinitions>
+                <Label Grid.Column="0" Content="Правило:" HorizontalAlignment="Right" Foreground="{StaticResource GrayBrush2}"/>
+                <ComboBox Grid.Column="1"
+                          ItemsSource="{Binding AvailableRules}"
+                          SelectedItem="{Binding ImportRule}">
+                    <ComboBox.ItemTemplate>
+                        <DataTemplate>
+                            <TextBlock>
+                                <Run Text="{Binding Identificator}"/>: <Run Text="{Binding Name}" FontWeight="Bold"/>
+                            </TextBlock>
+                        </DataTemplate>
+                    </ComboBox.ItemTemplate>
+                </ComboBox>
+            </Grid>
+            <Grid Margin="0,2,0,2">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="100"/>
+                    <ColumnDefinition Width="1*"/>
+                </Grid.ColumnDefinitions>
+                <CheckBox Grid.Column="1" Content="Импортировать в том числе сам источник" Foreground="{StaticResource GrayBrush2}"
+                          IsChecked="{Binding EmbedSource}"/>
+            </Grid>
+            <Grid Margin="0,5,0,2">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="100"/>
+                    <ColumnDefinition Width="1*"/>
+                </Grid.ColumnDefinitions>
+                <CheckBox Grid.Column="1" Content="Обновлять ранее полученные данные" Foreground="{StaticResource GrayBrush2}"
+                          IsChecked="{Binding CleanBeforeImport}"/>
+            </Grid>
+            <Grid Margin="0,0,0,5">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="124"/>
+                    <ColumnDefinition Width="1*"/>
+                </Grid.ColumnDefinitions>
+                <TextBlock Grid.Column="1" Foreground="{StaticResource AccentColorBrush}" FontSize="10" TextWrapping="Wrap">
+                    При установленном флаге данные, импортированные ранее с указанным идентификатором, будут предварительно удаляться.
+                </TextBlock>
+            </Grid>
+        </StackPanel>
+        <Grid Grid.Row="4">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="1*"/>
+                <ColumnDefinition Width="100"/>
+                <ColumnDefinition Width="100"/>
+            </Grid.ColumnDefinitions>
+            <Button Grid.Column="1" Content="Отменить" Margin="8,4,0,4" Command="{Binding Cancel}"/>
+            <Button Grid.Column="2" Content="Записать" Margin="8,4,0,4" Command="{Binding Save}"/>
+        </Grid>
+    </Grid>
+</Page>
